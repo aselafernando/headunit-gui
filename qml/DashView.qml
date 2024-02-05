@@ -9,7 +9,7 @@ import HUDPlugins 1.0
 Item {
     id: dashLayout
     anchors.fill: parent
-    state: rightMenu.extendedMenu ? "menuOpen" : ""
+    //state: rightMenu.extendedMenu ? "menuOpen" : ""
 
     LinearGradient {
         anchors.fill: parent
@@ -36,10 +36,10 @@ Item {
         id: contents
         anchors.left: parent.left
         anchors.leftMargin: 0
-        anchors.bottom: bottomBar.top
+        anchors.bottom: bottomMenu.top
         anchors.top: parent.top
         anchors.topMargin: 0
-        anchors.right: rightMenu.left
+        anchors.right: parent.right
         anchors.rightMargin: 0
         Repeater {
             id: contentsRepeater
@@ -55,7 +55,7 @@ Item {
                     asynchronous: false
                     anchors.fill: parent
                     active: pluginLoaded
-                    visible: pluginLoaded && rightMenu.currentIndex === index
+                    visible: pluginLoaded && bottomMenu.currentIndex === index
                              && !settingsLoader.active
                 }
                 Loader {
@@ -63,7 +63,7 @@ Item {
                     anchors.fill: parent
                     sourceComponent: loadingScreen
                     active: !pluginLoaded
-                    visible: !pluginLoaded && rightMenu.currentIndex === index
+                    visible: !pluginLoaded && bottomMenu.currentIndex === index
                     onActiveChanged: {
                         if (pluginLoaded)
                             loader.setSource(qmlSource, {
@@ -107,6 +107,8 @@ Item {
         }
     }
 
+/*
+
     RightMenu {
         id: rightMenu
         x: parent.width - (32 + 12 + 5)
@@ -127,10 +129,30 @@ Item {
             }
         }
     }
+*/
+
+    BottomMenu {
+        id: bottomMenu
+        height: 24
+        anchors.left: parent.left
+        anchors.leftMargin: 0
+        anchors.right: parent.right
+        anchors.rightMargin: 0
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 0
+        onCurrentIndexChanged: {
+            settingsLoader.unloadSettings()
+        }
+        onShowSettings: {
+            settingsLoader.loadSettings()
+        }
+    }
 
     Connections {
         target: GUIEvents
         ignoreUnknownSignals: true
+        property int prevVisiblePageIndex: 0
+
         onNotificationReceived: {
             notificationsItem.addNotification(notification)
         }
@@ -143,6 +165,52 @@ Item {
         onCloseOverlay: {
             overlays.close()
         }
+        //Go to the page next to the currently visible page
+        onChangePageNext: {
+            if(settingsLoader.visible) {
+                bottomMenu.currentIndex = 0;
+            } else if (bottomMenu.currentIndex === (contentsRepeater.count - 1)) {
+                settingsLoader.loadSettings();
+            } else {
+                if(bottomMenu.currentIndex >= (contentsRepeater.count - 1)) {
+                    bottomMenu.currentIndex = contentsRepeater.count - 1;
+                } else {
+                    bottomMenu.currentIndex++;
+                }
+            }
+        }
+
+        //Go to the page previous to the currently visible page
+        onChangePagePrev: {
+             if(settingsLoader.visible) {
+                bottomMenu.currentIndex = contentsRepeater.count - 1;
+            } else if (bottomMenu.currentIndex === 0) {
+                settingsLoader.loadSettings();
+            } else {
+                if(bottomMenu.currentIndex <= 0) {
+                    bottomMenu.currentIndex = 0;
+                } else {
+                    bottomMenu.currentIndex--;
+                }
+            }
+        }
+        //Jump to a particular page index
+        onChangePageIndex: {
+            if(settingsLoader.visible) {
+                prevVisiblePageIndex = -1;
+            } else {
+                prevVisiblePageIndex = bottomMenu.currentIndex;
+            }
+            bottomMenu.currentIndex = index;
+        }
+        //Change back to the page that was visible before onChangePageIndex was called
+        onChangePagePrevIndex: {
+            if(prevVisiblePageIndex === -1) {
+                settingsLoader.loadSettings();
+            } else {
+                bottomMenu.currentIndex = prevVisiblePageIndex;
+            }
+        }
     }
 
     Notifications {
@@ -150,7 +218,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
-        anchors.bottom: bottomBar.top
+        anchors.bottom: bottomMenu.top
     }
 
     Timer {
@@ -164,9 +232,9 @@ Item {
     Item {
         id: overlays
         anchors.left: parent.left
-        anchors.right: rightMenu.left
+        anchors.right: parent.right
         anchors.top: parent.top
-        anchors.bottom: bottomBar.top
+        anchors.bottom: bottomMenu.top
         opacity: 0
         property var currentOverlay: ""
         function open() {
@@ -183,6 +251,8 @@ Item {
             anchors.fill: parent
         }
     }
+
+    /*
     BottomBar {
         id: bottomBar
         height: parent.height * 0.1 //HUDStyle.sizes.bottomBarHeight
@@ -190,6 +260,7 @@ Item {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
     }
+    */
 
     Connections {
         target: overlayLoader.item
@@ -204,7 +275,7 @@ Item {
             name: "menuOpen"
 
             PropertyChanges {
-                target: rightMenu
+                target: bottomMenu
                 x: parent.width - width
                 anchors.rightMargin: 0
             }
