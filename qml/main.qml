@@ -6,8 +6,8 @@ import HUDPlugins 1.0
 Item {
 
     id: root
-    width: 800
-    height: 480
+    width: 1024
+    height: 600
 
     FontLoader {
         id: ralewayRegular
@@ -35,3 +35,4 @@ Item {
         }
     }
 }
+
