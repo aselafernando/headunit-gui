@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick
 import QmlDesigner 1.0
 
 DummyContextObject {
