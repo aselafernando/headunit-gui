@@ -1,7 +1,7 @@
 import QtQuick 2.6
 import QtQuick.Layouts 1.0
 import Qt.labs.settings 1.0
-import QtGraphicalEffects 1.0
+import Qt5Compat.GraphicalEffects
 
 import HUDPlugins 1.0
 import HUDTheme 1.0
