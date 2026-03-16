@@ -25,7 +25,7 @@ void DefaultTheme::initializeEngine(QQmlEngine *engine, const char* /*uri*/)
         engine->addImageProvider("icons", new ThemeIconProvider);
 }
 
-void DefaultTheme::onEvent(AbstractPlugin* plugin, QString sender, QString event, QVariant eventData) {
+void DefaultTheme::onEvent(AbstractPlugin* plugin, __attribute__((unused)) QString sender, QString event, QVariant eventData) {
     qDebug() << "Theme event : " << event << eventData;
     if(event == "Notification"){
         QJsonDocument doc = QJsonDocument::fromJson(eventData.toString().toUtf8());

@@ -28,7 +28,7 @@ public:
 
     Q_INVOKABLE QVariantList getMountedVolumes();
 public slots:
-    void onEvent(AbstractPlugin* plugin, QString sender, QString event, QVariant eventData);
+    void onEvent(AbstractPlugin* plugin, __attribute__((unused)) QString sender, QString event, QVariant eventData);
 private:
     GUIEvents *guiEvents;
 };
