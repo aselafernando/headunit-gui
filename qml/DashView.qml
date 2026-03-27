@@ -9,7 +9,6 @@ import HUDPlugins 1.0
 Item {
     id: dashLayout
     anchors.fill: parent
-    state: rightMenu.extendedMenu ? "menuOpen" : ""
 
     LinearGradient {
         anchors.fill: parent
@@ -36,10 +35,10 @@ Item {
         id: contents
         anchors.left: parent.left
         anchors.leftMargin: 0
-        anchors.bottom: bottomBar.top
+        anchors.bottom: bottomMenu.top
         anchors.top: parent.top
         anchors.topMargin: 0
-        anchors.right: rightMenu.left
+        anchors.right: parent.right
         anchors.rightMargin: 0
         Repeater {
             id: contentsRepeater
@@ -55,7 +54,7 @@ Item {
                     asynchronous: false
                     anchors.fill: parent
                     active: pluginLoaded
-                    visible: pluginLoaded && rightMenu.currentIndex === index
+                    visible: pluginLoaded && bottomMenu.currentIndex === index
                              && !settingsLoader.active
                 }
                 Loader {
@@ -63,7 +62,7 @@ Item {
                     anchors.fill: parent
                     sourceComponent: loadingScreen
                     active: !pluginLoaded
-                    visible: !pluginLoaded && rightMenu.currentIndex === index
+                    visible: !pluginLoaded && bottomMenu.currentIndex === index
                     onActiveChanged: {
                         if (pluginLoaded)
                             loader.setSource(qmlSource, {
@@ -106,7 +105,7 @@ Item {
             }
         }
     }
-
+/*
     RightMenu {
         id: rightMenu
         x: parent.width - (32 + 12 + 5)
@@ -125,6 +124,24 @@ Item {
                 properties: "x"
                 easing.type: Easing.InOutQuad
             }
+        }
+    }
+*/
+
+    BottomMenu {
+        id: bottomMenu
+        height: 24
+        anchors.left: parent.left
+        anchors.leftMargin: 0
+        anchors.right: parent.right
+        anchors.rightMargin: 0
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 0
+        onCurrentIndexChanged: {
+            settingsLoader.unloadSettings()
+        }
+        onShowSettings: {
+            settingsLoader.loadSettings()
         }
     }
 
@@ -199,7 +216,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
-        anchors.bottom: bottomBar.top
+        anchors.bottom: bottomMenu.top
     }
 
     Timer {
@@ -213,9 +230,9 @@ Item {
     Item {
         id: overlays
         anchors.left: parent.left
-        anchors.right: rightMenu.left
+        anchors.right: parent.right
         anchors.top: parent.top
-        anchors.bottom: bottomBar.top
+        anchors.bottom: bottomMenu.top
         opacity: 0
         property var currentOverlay: ""
         function open() {
@@ -232,6 +249,7 @@ Item {
             anchors.fill: parent
         }
     }
+/*
     BottomBar {
         id: bottomBar
         height: parent.height * 0.1 //HUDStyle.sizes.bottomBarHeight
@@ -239,7 +257,7 @@ Item {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
     }
-
+*/
     Connections {
         target: overlayLoader.item
         ignoreUnknownSignals: true
@@ -253,7 +271,7 @@ Item {
             name: "menuOpen"
 
             PropertyChanges {
-                target: rightMenu
+                target: bottomMenu
                 x: parent.width - width
                 anchors.rightMargin: 0
             }

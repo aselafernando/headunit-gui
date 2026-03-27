@@ -2,6 +2,7 @@
     <qresource prefix="/">
         <file>qml/DashView.qml</file>
         <file>qml/main.qml</file>
+        <file>qml/BottomMenu.qml</file>
         <file>qml/fonts/Raleway-Black.ttf</file>
         <file>qml/fonts/Raleway-Bold.ttf</file>
         <file>qml/fonts/Raleway-Light.ttf</file>
