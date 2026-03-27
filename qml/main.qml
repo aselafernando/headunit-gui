@@ -1,4 +1,4 @@
-import QtQuick 2.5
+import QtQuick
 import Qt.labs.settings 1.0
 
 import HUDPlugins 1.0

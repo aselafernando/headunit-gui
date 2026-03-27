@@ -1,5 +1,5 @@
 TEMPLATE = lib
-CONFIG += c++11 plugin link_pkgconfig
+CONFIG += c++17 plugin link_pkgconfig
 QT += qml quick quickcontrols2
 TARGET = $$qtLibraryTarget(default-theme)
 

@@ -1,6 +1,6 @@
-import QtQuick 2.7
+import QtQuick
 import QtQuick.Controls 2.1
-import QtGraphicalEffects 1.0
+import Qt5Compat.GraphicalEffects
 
 //import HUDStyle 1.0
 import HUDTheme 1.0
@@ -40,7 +40,7 @@ SettingsPageItem {
                 __root.value = text
             }
         }
-        validator: RegExpValidator { regExp: /[#?]{0,2}([0-9A-Fa-f]{8}|[0-9A-Fa-f]{6})/ }
+        validator: RegularExpressionValidator { regularExpression: /[#?]{0,2}([0-9A-Fa-f]{8}|[0-9A-Fa-f]{6})/ }
     }
 
     Rectangle {
