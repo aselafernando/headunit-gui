@@ -26,6 +26,10 @@ Item {
         property alias currentIndex: __root.currentIndex
     }
 
+    onCurrentIndexChanged: {
+        menuItemsRepeater.itemAt(currentIndex).onDisplay()
+    }
+
     Rectangle {
         color: "#212121"
         anchors.fill: parent
@@ -75,6 +79,13 @@ Item {
                 Layout.fillHeight: true
                 //Layout.columnSpan: 1
                 Layout.fillWidth: true
+                
+                readonly property string pluginName: model.name
+
+                function onDisplay() {
+                    pluginListModel.onDisplay(model.name)
+                }
+
                 Rectangle {
                     anchors.leftMargin: 5
                     anchors.rightMargin: 5
