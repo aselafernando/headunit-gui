@@ -18,12 +18,17 @@ Item {
         //__root.itemChanged(index)
     }
 
-    //Component.onCompleted: {
+    Component.onCompleted: {
     //    itemChanged(currentIndex)
-    //}
+        menuItemsRepeater.itemAt(currentIndex).onDisplay()
+    }
 
     Settings {
         property alias currentIndex: __root.currentIndex
+    }
+
+    onCurrentIndexChanged: {
+        menuItemsRepeater.itemAt(currentIndex).onDisplay()
     }
 
     Rectangle {
@@ -66,12 +71,19 @@ Item {
 
         Repeater {
             id: menuItemsRepeater
+
             model: PluginListModel {
+                id: pluginListModel
                 plugins: PluginList
                 listType: "MainMenu"
             }
 
             Item {
+                readonly property string pluginName: model.name
+                function onDisplay() {
+                    console.log("onDisplay")
+                    pluginListModel.onDisplay(model.name)
+                } 
                 Layout.fillHeight: true
                 //Layout.columnSpan: 1
                 Layout.fillWidth: true
@@ -102,6 +114,7 @@ Item {
                     }
 
                     Text {
+                        id: labelText
                         color: HUDStyle.colors.text
                         text: label
                         anchors.top: parent.top

@@ -64,12 +64,12 @@ Item {
                     active: !pluginLoaded
                     visible: !pluginLoaded && bottomMenu.currentIndex === index
                     onActiveChanged: {
-                        if (pluginLoaded)
+                        if (pluginLoaded) {
                             loader.setSource(qmlSource, {
                                                  "pluginContext": contextProperty,
                                                  "pluginSettings": settings
                                              })
-                        else
+                        } else
                             loader.setSource("")
                     }
                 }
@@ -153,12 +153,14 @@ Item {
         onNotificationReceived: {
             notificationsItem.addNotification(notification)
         }
+
         onOpenOverlay: {
             properties.pluginContext = contextProperty
             properties.pluginSettings = settings
             overlayLoader.setSource(source, properties)
             overlays.open()
         }
+
         onCloseOverlay: {
             overlays.close()
         }
@@ -166,14 +168,14 @@ Item {
         //Go to the page next to the currently visible page
         onChangePageNext: {
             if(settingsLoader.visible) {
-                rightMenu.currentIndex = 0;
-            } else if (rightMenu.currentIndex === (contentsRepeater.count - 1)) {
+                bottomMenu.currentIndex = 0;
+            } else if (bottomMenu.currentIndex === (contentsRepeater.count - 1)) {
                 settingsLoader.loadSettings();
             } else {
-                if(rightMenu.currentIndex >= (contentsRepeater.count - 1)) {
-                    rightMenu.currentIndex = contentsRepeater.count - 1;
+                if(bottomMenu.currentIndex >= (contentsRepeater.count - 1)) {
+                    bottomMenu.currentIndex = contentsRepeater.count - 1;
                 } else {
-                    rightMenu.currentIndex++;
+                    bottomMenu.currentIndex++;
                 }
             }
         }
@@ -181,32 +183,34 @@ Item {
         //Go to the page previous to the currently visible page
         onChangePagePrev: {
              if(settingsLoader.visible) {
-                rightMenu.currentIndex = contentsRepeater.count - 1;
-            } else if (rightMenu.currentIndex === 0) {
+                bottomMenu.currentIndex = contentsRepeater.count - 1;
+            } else if (bottomMenu.currentIndex === 0) {
                 settingsLoader.loadSettings();
             } else {
-                if(rightMenu.currentIndex <= 0) {
-                    rightMenu.currentIndex = 0;
+                if(bottomMenu.currentIndex <= 0) {
+                    bottomMenu.currentIndex = 0;
                 } else {
-                    rightMenu.currentIndex--;
+                    bottomMenu.currentIndex--;
                 }
             }
         }
+
         //Jump to a particular page index
         onChangePageIndex: {
             if(settingsLoader.visible) {
                 prevVisiblePageIndex = -1;
             } else {
-                prevVisiblePageIndex = rightMenu.currentIndex;
+                prevVisiblePageIndex = bottomMenu.currentIndex;
             }
-            rightMenu.currentIndex = index;
+            bottomMenu.currentIndex = index;
         }
+
         //Change back to the page that was visible before onChangePageIndex was called
         onChangePagePrevIndex: {
             if(prevVisiblePageIndex === -1) {
                 settingsLoader.loadSettings();
             } else {
-                rightMenu.currentIndex = prevVisiblePageIndex;
+                bottomMenu.currentIndex = prevVisiblePageIndex;
             }
         }
     }
