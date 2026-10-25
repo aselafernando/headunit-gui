@@ -87,6 +87,13 @@ Item {
                 Layout.fillHeight: true
                 //Layout.columnSpan: 1
                 Layout.fillWidth: true
+                
+                readonly property string pluginName: model.name
+
+                function onDisplay() {
+                    pluginListModel.onDisplay(model.name)
+                }
+
                 Rectangle {
                     anchors.leftMargin: 5
                     anchors.rightMargin: 5
